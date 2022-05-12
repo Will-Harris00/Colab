@@ -282,12 +282,12 @@ def draw_box(image, box, color):
     return image
 
 
-def display_top_masks(image, mask, class_ids, class_names, limit=4):
+def display_top_masks(image_info, image, mask, class_ids, class_names, limit=4):
     """Display the given image and the top few class masks."""
     to_display = []
     titles = []
     to_display.append(image)
-    titles.append("H x W={}x{}".format(image.shape[0], image.shape[1]))
+    titles.append(image_info['file_name'])
     # Pick top prominent classes in this image
     unique_class_ids = np.unique(class_ids)
     mask_area = [np.sum(mask[:, :, np.where(class_ids == i)[0]])
@@ -301,7 +301,8 @@ def display_top_masks(image, mask, class_ids, class_names, limit=4):
         m = mask[:, :, np.where(class_ids == class_id)[0]]
         m = np.sum(m * np.arange(1, m.shape[-1] + 1), -1)
         to_display.append(m)
-        titles.append(class_names[class_id] if class_id != -1 else "-")
+        titles.append("Number of ship instances: {}".format(len(class_ids)))
+        print("Number of ship instances: {}".format(len(class_ids)))
     display_images(to_display, titles=titles, cols=limit + 1, cmap="Blues_r")
 
 
